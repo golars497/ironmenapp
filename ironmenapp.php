@@ -12,20 +12,23 @@ Author: John Calzado
 //require_once('/assets/multi-post-thumbnails.php');
 //add_theme_support( 'post-thumbnails' );
 
-function debug_to_console( $data ) {
-    $output = $data;
-    if ( is_array( $output ) )
-        $output = implode( ',', $output);
 
-    echo "<script>console.log( 'Debug Objects: " . $output . "' );</script>";
+function hkdc_admin_scripts() {
+  wp_enqueue_script( 'jquery-ui-datepicker');
+  wp_enqueue_style('e2b-admin-ui-css','http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css',false,"1.9.0",false);
+  wp_enqueue_script(
+    'wp-jquery-date-picker',
+    plugin_dir_url(__FILE__) . 'jquery-ui-datepicker/pbd-datepicker.js'
+  );  
 }
+add_action('admin_enqueue_scripts', 'hkdc_admin_scripts');
 
 
 //============ CUSTOM POST TYPES ============//
 
 // Create a single function to initialize all the different custom post types
 function create_custom_post_types() {	
-  register_post_type( 'event',
+  register_post_type( 'ironmen-event',
     array(
       'show_in_rest' => true,
     	'supports' => array(
@@ -59,12 +62,12 @@ function add_feature_image_controls_to_posts() {
 	    new MultiPostThumbnails(array(
 	        'label' => 'Feature Image 2',
 	        'id' => 'feature-image-2',
-	        'post_type' => 'event'
+	        'post_type' => 'ironmen-event'
 	        )
 	    );   
 	};
 }
-add_feature_image_controls_to_posts();
+//add_feature_image_controls_to_posts();
 
 //function to contain all addition of meta boxes
 function add_metabox () {
@@ -72,26 +75,28 @@ function add_metabox () {
     'event_date',
     __( 'Event Date', 'Event' ),
     'add_event_date_meta_cb',
-    'event'
+    'ironmen-event',
+    'side',
+    'default'
   );
 
   add_meta_box(
     'event_reg_date',
     __( 'Event Registration Date', 'Event' ),
     'add_event_reg_date_meta_cb',
-    'event'
+    'ironmen-event'
   );
 
   add_meta_box(
     'event_notif_days',
     __( 'Number of days before notifying user', 'Event' ),
     'add_event_event_notif_days_meta_cb',
-    'event'
+    'ironmen-event'
   );
 
 }
 
-add_action( 'add_meta_boxes', 'add_metabox' );
+add_action( 'add_meta_boxes_ironmen-event', 'add_metabox' );
 
 //callback for adding date event
 function add_event_date_meta_cb ($post) {
@@ -101,7 +106,8 @@ function add_event_date_meta_cb ($post) {
 
     $value = get_post_meta( $post->ID, '_event_date', true );
 
-    echo '<textarea style="width:100%" id="event_date" name="event_date">' . esc_attr( $value ) . '</textarea>';
+    echo '<div><input type="text" style="width:100%" class="datepicker" name="event_date" value="' . esc_attr( $value ) . '"></div>';
+
 }  
 
 //callback for adding date event registration
@@ -126,7 +132,7 @@ function save_event_date ($event_id) {
   save_meta_data($event_id, 'event_reg_date', '_event_reg_date');
   save_meta_data($event_id, 'event_notif_days', '_event_notif_days');
 }
-add_action( 'save_post_event', 'save_event_date' );
+add_action( 'save_post_ironmen-event', 'save_event_date' );
 
 
 //============ HELPER FUNCTIONS ============//
@@ -158,42 +164,42 @@ function save_meta_data( $post_id , $POST_field_name, $meta_key) {
 //register post fields for REST
 function create_api_posts_meta_field() {
   register_rest_field( 
-    'event', 
+    'ironmen-event', 
     'feature_image_2', array(
     'get_callback' => function ( $data ) {
       return get_meta_image($data, 'event_industry-slider-image_thumbnail_id');
     })
   );
   register_rest_field(
-    'event',
+    'ironmen-event',
     'feature_image',
     array(
         'get_callback' => 'get_image'
     )
   ); 
   register_rest_field(
-    'event',
+    'ironmen-event',
     'event_date',
     array(
         'get_callback' => 'get_event_date'
     )
   );  
   register_rest_field(
-    'event',
+    'ironmen-event',
     'event_reg_date',
     array(
         'get_callback' => 'get_event_reg_date'
     )
   ); 
   register_rest_field(
-    'event',
+    'ironmen-event',
     'event_desc',
     array(
         'get_callback' => 'get_event_desc'
     )
   ); 
   register_rest_field(
-    'event',
+    'ironmen-event',
     'event_notif_days',
     array(
         'get_callback' => 'get_event_notif_days'
