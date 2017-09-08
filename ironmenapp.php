@@ -81,10 +81,12 @@ function add_metabox () {
   );
 
   add_meta_box(
-    'event_reg_date',
-    __( 'Event Registration Date', 'Event' ),
+    'event_reg_date'
+,    __( 'Event Registration Date', 'Event' ),
     'add_event_reg_date_meta_cb',
-    'ironmen-event'
+    'ironmen-event',
+    'side',
+    'default'
   );
 
   add_meta_box(
@@ -115,7 +117,7 @@ function add_event_reg_date_meta_cb ($post) {
 
     $value = get_post_meta( $post->ID, '_event_reg_date', true );
 
-    echo '<textarea style="width:100%" id="event_date" name="event_reg_date">' . esc_attr( $value ) . '</textarea>';
+    echo '<div><input type="text" style="width:100%" class="datepicker" name="event_reg_date" value="' . esc_attr( $value ) . '"></div>';
 }
 
 //callback for adding date event registration
@@ -123,7 +125,7 @@ function add_event_event_notif_days_meta_cb ($post) {
 
     $value = get_post_meta( $post->ID, '_event_notif_days', true );
 
-    echo '<textarea style="width:100%" id="event_notif_days" name="event_notif_days">' . esc_attr( $value ) . '</textarea>';
+    echo '<ul class="ironmen_event_reminders_list"></ul><a class="ironmen_event_reminders_list_btn page-title-action">Add Reminder</a>';
 }
 
 //saving meta
