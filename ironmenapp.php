@@ -16,6 +16,7 @@ Author: John Calzado
 function hkdc_admin_scripts() {
   wp_enqueue_script( 'jquery-ui-datepicker');
   wp_enqueue_style('e2b-admin-ui-css','http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/base/jquery-ui.css',false,"1.9.0",false);
+  wp_enqueue_style('style-css', plugin_dir_url(__FILE__) .'style.css');
   wp_enqueue_script(
     'wp-jquery-date-picker',
     plugin_dir_url(__FILE__) . 'jquery-ui-datepicker/pbd-datepicker.js'
@@ -123,9 +124,26 @@ function add_event_reg_date_meta_cb ($post) {
 //callback for adding date event registration
 function add_event_event_notif_days_meta_cb ($post) {
 
-    $value = get_post_meta( $post->ID, '_event_notif_days', true );
+    $notifications = get_post_meta( $post->ID, '_event_notif_days', false );
 
-    echo '<ul class="ironmen_event_reminders_list"></ul><a class="ironmen_event_reminders_list_btn page-title-action">Add Reminder</a>';
+    //we do this because the array of reminders is within the first element of the notifications array
+    $notifications = $notifications[0];
+
+    $notifcations_string;
+    $c = 0;
+
+    if ( count($notifications) > 0) {
+        foreach ($notifications as $notification) {
+          if ( isset($notification['number']) || isset($notification['unit']) ) {
+            $html_string = '<div><input type="text" class="input-metabox" style="width:30%" name="event_notif_days['.$c.'][number]" value="'.$notification['number'].'"></input><input type="text" class="input-metabox" style="width:30%" name="event_notif_days['.$c.'][unit]" value="'.$notification['unit'].'"></input><a class="ironmen_event_reminders_list_remove_btn page-title-action" onclick="ironmen_event_removeReminder(this)">remove</a></div>';
+            $notifcations_string = $notifcations_string . $html_string;
+            $c = $c + 1; 
+          } 
+        }
+    }
+
+
+    echo '<ul class="ironmen_event_reminders_list">'.$notifcations_string.'</ul><a class="ironmen_event_reminders_list_btn page-title-action" onclick="ironmen_event_addReminder()">Add Reminder</a>';
 }
 
 //saving meta
