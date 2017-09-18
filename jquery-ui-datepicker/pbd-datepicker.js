@@ -16,7 +16,7 @@ function ironmen_event_addReminder(){
 	} else {
 		input_index = 0;
 	}
-	var controlString = '<div><input type="text" name="event_notif_days[' + (input_index + 1) + '][number]" value="" class="input-metabox" style="width:30%"></input><input type="text" name="event_notif_days[' + (input_index + 1) + '][unit]" value="" class="input-metabox" style="width:30%"></input><a class="ironmen_event_reminders_list_remove_btn page-title-action" onclick="ironmen_event_removeReminder(this)">remove</a></div>';
+	var controlString = '<div><input type="text" name="event_notif_days[' + (input_index + 1) + '][number]" value="" class="input-metabox" style="width:30%"></input><select type="text" name="event_notif_days[' + (input_index + 1) + '][unit]" value="" class="select-metabox" style="width:30%"><option value="days" selected>days</option><option value="weeks">weeks</option></select><a class="ironmen_event_reminders_list_remove_btn page-title-action" onclick="ironmen_event_removeReminder(this)">remove</a></div>';
 	jQuery(".ironmen_event_reminders_list").append(controlString);			
 }
 

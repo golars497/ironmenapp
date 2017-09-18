@@ -135,7 +135,14 @@ function add_event_event_notif_days_meta_cb ($post) {
     if ( count($notifications) > 0) {
         foreach ($notifications as $notification) {
           if ( isset($notification['number']) || isset($notification['unit']) ) {
-            $html_string = '<div><input type="text" class="input-metabox" style="width:30%" name="event_notif_days['.$c.'][number]" value="'.$notification['number'].'"></input><input type="text" class="input-metabox" style="width:30%" name="event_notif_days['.$c.'][unit]" value="'.$notification['unit'].'"></input><a class="ironmen_event_reminders_list_remove_btn page-title-action" onclick="ironmen_event_removeReminder(this)">remove</a></div>';
+
+
+            $select_string = '<select type="text" class="select-metabox" style="width:30%" name="event_notif_days['.$c.'][unit]">
+             <option value="days" ' . is_option_selected($notification['unit'], 'days'). '>days</option>
+             <option value="weeks" ' . is_option_selected($notification['unit'], 'weeks'). '>weeks</option>
+            </select>';
+
+            $html_string = '<div><input type="text" class="input-metabox" style="width:30%" name="event_notif_days['.$c.'][number]" value="'.$notification['number'].'"></input>' . $select_string . '<a class="ironmen_event_reminders_list_remove_btn page-title-action" onclick="ironmen_event_removeReminder(this)">remove</a></div>';
             $notifcations_string = $notifcations_string . $html_string;
             $c = $c + 1; 
           } 
@@ -175,6 +182,16 @@ function save_meta_data( $post_id , $POST_field_name, $meta_key) {
   }
 }  
 
+
+/*
+ * function to determine if current option is supposed to be selected
+ */
+function is_option_selected ($saved_value, $option_value ) {
+  if ($saved_value == $option_value) {
+    return 'selected';
+  }
+  return '';
+}
 
 
 

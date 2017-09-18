@@ -7,3 +7,12 @@
     line-height: normal;
     outline: 0;
 }
+.select-metabox {
+	margin-left: 4px;
+    padding: 4px 8px;
+    position: relative;
+    top: -5px;
+    text-decoration: none;
+    line-height: normal;
+    outline: 0;
+}
